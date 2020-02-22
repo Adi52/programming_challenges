@@ -127,7 +127,7 @@ while active:
 
     wykorzystane_litery = []
 
-    print(word)
+
 
     # Pętla konkretnej rozgrywki
     while lifes > 0:
