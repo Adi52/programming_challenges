@@ -125,7 +125,8 @@ while active:
         stan.append('_')
     stan.append(word[-1])
 
-    wykorzystane_litery = []
+    correct_letters = []
+    user_choices_letters = []
 
 
 
@@ -137,24 +138,26 @@ while active:
 
         draw_hangman(lifes)
 
-        if wykorzystane_litery:
-            print("Już użyłeś: ", ", ".join(wykorzystane_litery))
+        if correct_letters:
+            print("Już użyłeś: ", ", ".join(user_choices_letters))
 
         print(" ".join(stan))
 
         your_choice = input("Podaj literę (wpisz 'quit' aby zakończyć grę): ")
 
+        user_choices_letters.append(your_choice)
+
         if your_choice == 'quit' or your_choice == 'Quit':
             active = False
             break
 
-        t = [i for i, x in enumerate(word) if x == your_choice and x not in wykorzystane_litery]
+        t = [i for i, x in enumerate(word) if x == your_choice and x not in correct_letters]
 
         time.sleep(2)
         if t:
             for a in t:
                 stan[a] = your_choice
-            wykorzystane_litery.append(your_choice)
+            correct_letters.append(your_choice)
             print('Dobrze!')
 
         else:
@@ -167,4 +170,5 @@ while active:
             print('\nBRAWO, WYGRAŁEŚ!\n')
             break
 
+        time.sleep(1)
         cls()
