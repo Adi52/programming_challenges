@@ -16,9 +16,9 @@ def display_board(board):
     for i in board:
         print(i)
 
-def drop_piece(board, row, user_choice, piece):
+def drop_piece(board, user_choice, piece):
+    row = get_next_open_row(board, user_choice)
     board[row][user_choice-1] = piece
-
 
 
 def is_valid_location(board, user_choice):
@@ -55,8 +55,7 @@ while not game_over:
         continue
 
     if is_valid_location(board, user_choice):
-        row = get_next_open_row(board, user_choice)
-        drop_piece(board, row, user_choice, 1)
+        drop_piece(board, user_choice, 1)
     else:
         print('Już jest pełno!')
 
