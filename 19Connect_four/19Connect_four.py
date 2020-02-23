@@ -1,9 +1,10 @@
 import time
+from board import Board
 
+
+"""
 ROW_COUNT = 6
 COLUMN_COUNT = 7
-
-
 
 board = [[0, 0, 0, 0, 0, 0, 0],
          [0, 0, 0, 0, 0, 0, 0],
@@ -13,6 +14,7 @@ board = [[0, 0, 0, 0, 0, 0, 0],
          [0, 0, 0, 0, 0, 0, 0]]
 
 def display_board(board):
+    print(" 1  2  3  4  5  6  7")
     for i in board:
         print(i)
 
@@ -30,6 +32,9 @@ def get_next_open_row(board, user_choice):
         if board[i][user_choice-1] == 0:
             result += 1
     return result
+"""
+board = Board()
+
 
 def incorrect_input():
     print('Możesz wpisać tylko liczbę 1-7!')
@@ -42,8 +47,7 @@ print('Zaczynaj! wybierz kolumne 1-7 w którą chcesz wrzucić żeton.')
 print('X - Ty')
 print('Y - przeciwnik')
 while not game_over:
-    print(" 1  2  3  4  5  6  7")
-    display_board(board)
+    board.display_board()
 
     try:
         user_choice = int(input("Wybieram: "))
@@ -54,8 +58,8 @@ while not game_over:
         incorrect_input()
         continue
 
-    if is_valid_location(board, user_choice):
-        drop_piece(board, user_choice, 1)
+    if board.is_valid_location(user_choice):
+        board.drop_piece(user_choice, 1)
     else:
         print('Już jest pełno!')
 
