@@ -1,6 +1,9 @@
+import time
 
 ROW_COUNT = 6
 COLUMN_COUNT = 7
+
+
 
 board = [[0, 0, 0, 0, 0, 0, 0],
          [0, 0, 0, 0, 0, 0, 0],
@@ -28,6 +31,9 @@ def get_next_open_row(board, user_choice):
             result += 1
     return result
 
+def incorrect_input():
+    print('Możesz wpisać tylko liczbę 1-7!')
+    time.sleep(2)
 
 
 game_over = False
@@ -39,11 +45,17 @@ while not game_over:
     print(" 1  2  3  4  5  6  7")
     display_board(board)
 
-    user_choice = int(input("Wybieram: "))
-    print('dupa', is_valid_location(board, user_choice))
+    try:
+        user_choice = int(input("Wybieram: "))
+        if user_choice > 7 or user_choice < 1:
+            incorrect_input()
+            continue
+    except ValueError:
+        incorrect_input()
+        continue
+
     if is_valid_location(board, user_choice):
         row = get_next_open_row(board, user_choice)
-        print('row', row)
         drop_piece(board, row, user_choice, 1)
     else:
         print('Już jest pełno!')
