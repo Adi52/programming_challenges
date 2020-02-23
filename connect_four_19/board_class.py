@@ -1,13 +1,14 @@
 
 class Board():
-    def __init__(self, user_choice):
+
+    def __init__(self):
         self.board = [[0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0]]
-        self.user_choice = user_choice
+
         self.ROW_COUNT = 6
         self.COLUMN_COUNT = 7
 
@@ -16,17 +17,17 @@ class Board():
         for i in self.board:
             print(i)
 
-    def get_next_open_row(self):
+    def get_next_open_row(self, user_choice):
         result = -1
         for i in range(self.ROW_COUNT):
-            if self.board[i][self.user_choice - 1] == 0:
+            if self.board[i][user_choice - 1] == 0:
                 result += 1
         return result
 
-    def drop_piece(self, piece):
-        row = self.get_next_open_row(self.board, self.user_choice)
-        self.board[row][self.user_choice - 1] = piece
+    def drop_piece(self, user_choice, piece):
+        row = self.get_next_open_row(user_choice)
+        self.board[row][user_choice - 1] = piece
 
-    def is_valid_location(self):
-        return self.board[0][self.user_choice - 1] == 0
+    def is_valid_location(self, user_choice):
+        return self.board[0][user_choice - 1] == 0
 
