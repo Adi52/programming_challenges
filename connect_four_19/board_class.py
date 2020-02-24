@@ -29,6 +29,7 @@ class Board():
         row = self.get_next_open_row(user_choice)
         self.board[row][user_choice - 1] = piece
 
+
     def is_valid_location(self, user_choice):
         return self.board[0][user_choice - 1] == 0
 
