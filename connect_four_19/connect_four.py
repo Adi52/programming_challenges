@@ -10,7 +10,7 @@ from piece import Piece
 
 board = Board()
 
-is_player_turn = false
+is_player_turn = True
 
 def bot_choice():
     return random.randint(0, 6)
