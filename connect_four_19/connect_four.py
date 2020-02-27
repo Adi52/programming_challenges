@@ -9,8 +9,8 @@ from filledrounded_rect import AAfilledRoundedRect
 from piece import Piece
 
 board = Board()
-turn = 1
 
+is_player_turn = True
 
 def bot_choice():
     return random.randint(0, 6)
@@ -26,20 +26,18 @@ def user_choice_def(event):
 
 def check_events(screen, game_over, ai_settings, piece):
     # Reakcja na zdarzenia generowane przez klawiaturę i mysz.
-    global turn
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
 
-        if event.type == pygame.MOUSEMOTION and turn == 1:
+        if event.type == pygame.MOUSEMOTION:
             posx = event.pos[0]
             pygame.gfxdraw.aacircle(screen, posx, 50, 42, (139, 124, 0))
             pygame.gfxdraw.filled_circle(screen, posx, 50, 42, (139, 124, 0))
             pygame.display.flip()
 
         if event.type == pygame.MOUSEBUTTONDOWN:
-            perform_turn(event, game_over, ai_settings, screen, piece)
-            turn += 1
+            perform_turn(user_choice_def(event), 1, game_over, ai_settings, screen, piece)
 
 
 def update_screen(ai_settings, screen, piece):
@@ -63,22 +61,13 @@ def update_screen(ai_settings, screen, piece):
     pygame.display.flip()
 
 
-def perform_turn(event, game_over, ai_settings, screen, piece):
-    global turn
-    turn = turn % 2
-    if turn == 0:
-        user_choice = user_choice_def(event)
-
-    elif turn == 1:
-        user_choice = bot_choice()
-
-
-    if board.is_valid_location(user_choice):
-        board.drop_piece(user_choice, turn + 1)
+def perform_turn(choice, who, game_over, ai_settings, screen, piece):
+    if board.is_valid_location(choice):
+        board.drop_piece(choice, who + 1)
         #board.display_board()
 
-        if board.winning_condition(turn):
-            message = 'Wygrana gracza {}!'.format(turn + 1)
+        if board.winning_condition(who):
+            message = 'Wygrana gracza {}!'.format(who + 1)
             update_screen(ai_settings, screen, piece)
             time.sleep(0.5)
 
@@ -99,6 +88,10 @@ def run_game():
 
     while not game_over:
         update_screen(ai_settings, screen, piece)
-        check_events(screen, game_over, ai_settings, piece)
+        if is_player_turn:
+            check_events(screen, game_over, ai_settings, piece)
+        else:
+            perform_turn(bot_choice(), 0, game_over, ai_settings, screen, piece)
+        is_player_turn != is_player_turn
 
 run_game()
