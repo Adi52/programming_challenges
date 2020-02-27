@@ -1,8 +1,7 @@
 import random
 import pygame
 import pygame.gfxdraw
-import sys
-import time
+import sys, time
 from math import floor
 from settings import Settings
 from board_class import Board
@@ -10,7 +9,7 @@ from filledrounded_rect import AAfilledRoundedRect
 from piece import Piece
 
 board = Board()
-turn = 0
+turn = 1
 
 
 def bot_choice():
@@ -25,24 +24,22 @@ def user_choice_def(event):
     return user_choice
 
 
-def check_events(ai_settings, screen, game_over):
+def check_events(screen, game_over, ai_settings, piece):
     # Reakcja na zdarzenia generowane przez klawiaturę i mysz.
+    global turn
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
 
-        if event.type == pygame.MOUSEMOTION:
+        if event.type == pygame.MOUSEMOTION and turn == 1:
             posx = event.pos[0]
+            pygame.gfxdraw.aacircle(screen, posx, 50, 42, (139, 124, 0))
             pygame.gfxdraw.filled_circle(screen, posx, 50, 42, (139, 124, 0))
-
             pygame.display.flip()
 
         if event.type == pygame.MOUSEBUTTONDOWN:
-            perform_turn(event, ai_settings, screen, game_over)
-            global turn
+            perform_turn(event, game_over, ai_settings, screen, piece)
             turn += 1
-
-
 
 
 def update_screen(ai_settings, screen, piece):
@@ -66,7 +63,7 @@ def update_screen(ai_settings, screen, piece):
     pygame.display.flip()
 
 
-def perform_turn(event, ai_settings, screen, game_over):
+def perform_turn(event, game_over, ai_settings, screen, piece):
     global turn
     turn = turn % 2
     if turn == 0:
@@ -81,13 +78,15 @@ def perform_turn(event, ai_settings, screen, game_over):
         #board.display_board()
 
         if board.winning_condition(turn):
-            print('Wygrana gracza {}!'.format(turn + 1))
+            message = 'Wygrana gracza {}!'.format(turn + 1)
+            update_screen(ai_settings, screen, piece)
+            time.sleep(0.5)
+
             game_over = True
 
-
-
     if game_over:
-        pygame.time.wait(5000)
+        time.sleep(4)
+        sys.exit()
 
 
 def run_game():
@@ -100,7 +99,6 @@ def run_game():
 
     while not game_over:
         update_screen(ai_settings, screen, piece)
-        check_events(ai_settings, screen, game_over)
-
+        check_events(screen, game_over, ai_settings, piece)
 
 run_game()
