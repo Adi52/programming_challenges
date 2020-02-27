@@ -92,7 +92,6 @@ def run_game():
             check_events(screen, game_over, ai_settings, piece)
         else:
             perform_turn(bot_choice(), 0, game_over, ai_settings, screen, piece)
-            
-        
+        is_player_turn != is_player_turn
 
 run_game()
