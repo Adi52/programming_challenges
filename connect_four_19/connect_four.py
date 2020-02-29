@@ -1,7 +1,9 @@
 import random
 import pygame
 import pygame.gfxdraw
-import sys, time
+import pygame.mouse
+import sys
+import time
 from math import floor
 from settings import Settings
 from board_class import Board
@@ -9,7 +11,7 @@ from filledrounded_rect import AAfilledRoundedRect
 from piece import Piece
 
 board = Board()
-turn = 1
+turn = 0
 
 
 def bot_choice():
@@ -24,22 +26,23 @@ def user_choice_def(event):
     return user_choice
 
 
-def check_events(screen, game_over, ai_settings, piece):
+def check_events(ai_settings, screen, game_over, piece):
     # Reakcja na zdarzenia generowane przez klawiaturę i mysz.
-    global turn
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
 
-        if event.type == pygame.MOUSEMOTION and turn == 1:
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            perform_turn(event, ai_settings, screen, game_over, piece)
+
+            global turn
+            turn += 1
+            print(turn)
+
+        if event.type == pygame.MOUSEMOTION and (turn == 0 or turn == 2):
             posx = event.pos[0]
-            pygame.gfxdraw.aacircle(screen, posx, 50, 42, (139, 124, 0))
             pygame.gfxdraw.filled_circle(screen, posx, 50, 42, (139, 124, 0))
             pygame.display.flip()
-
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            perform_turn(event, game_over, ai_settings, screen, piece)
-            turn += 1
 
 
 def update_screen(ai_settings, screen, piece):
@@ -63,7 +66,7 @@ def update_screen(ai_settings, screen, piece):
     pygame.display.flip()
 
 
-def perform_turn(event, game_over, ai_settings, screen, piece):
+def perform_turn(event, ai_settings, screen, game_over, piece):
     global turn
     turn = turn % 2
     if turn == 0:
@@ -72,20 +75,17 @@ def perform_turn(event, game_over, ai_settings, screen, piece):
     elif turn == 1:
         user_choice = bot_choice()
 
-
     if board.is_valid_location(user_choice):
         board.drop_piece(user_choice, turn + 1)
         #board.display_board()
 
         if board.winning_condition(turn):
-            message = 'Wygrana gracza {}!'.format(turn + 1)
             update_screen(ai_settings, screen, piece)
-            time.sleep(0.5)
-
+            print('Wygrana gracza {}!'.format(turn + 1))
             game_over = True
 
     if game_over:
-        time.sleep(4)
+        time.sleep(3)
         sys.exit()
 
 
@@ -96,9 +96,12 @@ def run_game():
     piece = Piece(screen, board, ai_settings)
     pygame.display.set_caption("Connect four")
     game_over = False
+    pygame.mouse.set_visible(0)
 
     while not game_over:
         update_screen(ai_settings, screen, piece)
-        check_events(screen, game_over, ai_settings, piece)
+        check_events(ai_settings, screen, game_over, piece)
+
+
 
 run_game()
